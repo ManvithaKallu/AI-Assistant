@@ -1,208 +1,133 @@
-# AI Assistant: Chat & Talk with Your Documents
+# AI Assistant
 
-## 1. Introduction
-
-AI Assistant is an intelligent, full-stack application that enables users to interact with their documents using both text and voice. The system leverages Retrieval-Augmented Generation (RAG) to provide accurate, context-aware responses grounded in user-uploaded documents.
-
-Unlike traditional chatbots, this application allows users to upload multiple documents and query them conversationally, with responses supported by source citations. Additionally, it integrates voice capabilities, allowing users to speak queries and receive audio responses in real time.
-
-This project demonstrates a production-style implementation of modern AI systems, combining large language models, vector search, and real-time user interfaces.
+A full-stack Retrieval-Augmented Generation (RAG) system that enables users to interact with documents via text and voice.
 
 ---
 
-## 2. Objectives
+## Overview
 
-The primary goals of this project are:
+This application allows users to upload documents and query them using natural language. It combines semantic retrieval with a language model to generate context-aware responses grounded in document data.
 
-- To build a document-based question-answering system using RAG
-- To enable both text and voice-based interaction with documents
-- To provide real-time streaming responses for improved user experience
-- To ensure transparency through source citations
-- To create a clean, modern, and user-friendly interface
+The system supports both chat-based and voice-based interaction, with real-time streaming responses and source attribution.
 
 ---
 
-## 3. System Overview
+## Features
 
-The system consists of two main components:
-
-### Backend (FastAPI)
-- Handles document processing, embedding, and retrieval
-- Communicates with the language model
-- Streams responses to the frontend
-- Manages session-based document storage
-
-### Frontend (React)
-- Provides an interactive UI for users
-- Supports chat and voice modes
-- Displays responses and sources
-- Plays audio output for AI responses
+- Multi-document upload (PDF, TXT)
+- Semantic retrieval using FAISS
+- Context-aware response generation via LLM
+- Streaming responses (Server-Sent Events)
+- Voice input (speech-to-text)
+- Audio output (text-to-speech)
+- Source citations (document + page)
+- Session-based document isolation
 
 ---
 
-## 4. Key Features
-
-### 4.1 Document Processing
-- Supports uploading multiple documents (PDF and TXT)
-- Automatically splits documents into chunks
-- Generates embeddings for semantic search
-- Stores vectors using FAISS
-
-### 4.2 Chat Mode
-- Users can type questions
-- AI responds with context-aware answers
-- Responses are streamed in real-time
-- Sources are displayed with document name and page number
-
-### 4.3 Talk Mode (Voice Interaction)
-- Users can speak their questions
-- Speech is converted to text using browser APIs
-- AI responses are spoken aloud
-- Includes playback controls:
-  - Pause
-  - Resume
-  - Stop
-
-### 4.4 Audio Experience
-- AI responses are played instantly (no waiting for full text)
-- Document summaries can be played as audio
-- Visual waveform animation during speech
-
-### 4.5 Source Citations
-- Every answer is backed by document references
-- Displays:
-  - Document name
-  - Page number
-- Improves trust and explainability
-
-### 4.6 Streaming Responses
-- Backend streams tokens as they are generated
-- Frontend updates UI in real time
-- Enhances responsiveness and UX
+## Architecture
+User Input (Text / Voice)
+↓
+Frontend (React)
+↓
+FastAPI Backend
+↓
+Retrieval Layer (FAISS)
+↓
+Context Construction
+↓
+LLM (Ollama)
+↓
+Streaming Response
+↓
+Frontend Rendering + Audio
 
 ---
 
-## 5. Technology Stack
+## System Design
+
+### Document Ingestion
+- Extract text from uploaded files
+- Split into chunks
+- Generate embeddings
+- Store in FAISS with metadata
+
+### Query Processing
+- Convert speech to text (if applicable)
+- Retrieve top-k relevant chunks
+- Build prompt using retrieved context
+- Generate response using LLM
+- Stream tokens to frontend
+
+### Streaming
+- Implemented using Server-Sent Events (SSE)
+- Enables incremental rendering of responses
+- Supports real-time audio playback
+
+---
+
+## Tech Stack
 
 ### Backend
-- FastAPI — API framework
-- FAISS — Vector database
-- Python — Core programming language
-- Ollama — Local large language model
+- FastAPI
+- FAISS
+- Python
+- Ollama (LLM)
 
 ### Frontend
-- React (Vite) — UI framework
-- Tailwind CSS — Styling
-- Web Speech API — Voice input and output
+- React (Vite)
+- Tailwind CSS
+- Web Speech API
 
 ---
 
-## 6. Architecture Workflow
-
-1. User uploads one or more documents
-2. Documents are:
-   - Parsed
-   - Chunked
-   - Converted into embeddings
-3. Embeddings are stored in FAISS
-4. User asks a question (text or voice)
-5. System retrieves relevant chunks
-6. Context is sent to the language model
-7. AI generates response
-8. Response is:
-   - Streamed to UI
-   - Spoken aloud (if in talk mode)
-9. Sources are displayed alongside the answer
-
----
-
-## 7. Project Structure
-AI-Assistant/
-│
-├── app.py # FastAPI application
-├── rag_engine.py # RAG logic (retrieval + generation)
+## Project Structure
+AI-Assistant
+├── app.py # FastAPI server
+├── rag_engine.py # RAG pipeline
 ├── requirements.txt
-│
-├── frontend/
-│ ├── src/
-│ │ ├── App.jsx # Main UI component
-│ │ ├── main.jsx
-│ │ ├── index.css
-│ │
+├── frontend # React UI
+│ ├── src
 │ ├── index.html
-│ ├── package.json
-│ └── vite.config.js
-│
+│ └── package.json
 └── .gitignore
 
 ---
 
-## 8. Setup Instructions
+## Setup
 
-### Backend Setup
+### Backend
 
-1. Install dependencies:
+```bash
 pip install -r requirements.txt
-
-2. Start server:
 uvicorn app:app --reload
-
-Server runs at:
-http://127.0.0.1:8000
-
----
-
-### Frontend Setup
-
-1. Navigate to frontend:
+Frontend
 cd frontend
-
-2. Install dependencies:
 npm install
-
-3. Run application:
 npm run dev
 
-Frontend runs at:
-http://localhost:5173
+**Key Engineering Decisions**
+•	FAISS for efficient local vector search 
+•	Chunk-based retrieval to improve relevance and scalability 
+•	Streaming responses to reduce perceived latency 
+•	Local LLM (Ollama) for privacy and offline capability 
+•	Voice interaction layer to extend beyond traditional chat UX
 
----
+**Limitations**
+•	Local FAISS storage (non-distributed) 
+•	No authentication (single-user session) 
+•	Performance dependent on local environment 
+•	Limited file format support 
+•	No reranking in retrieval pipeline
 
-## 9. Use Cases
+**Future Work**
+•	Persistent vector storage (cloud-based) 
+•	Authentication and multi-user support 
+•	Retrieval reranking 
+•	Hybrid search (keyword + vector) 
+•	Cloud deployment 
+•	Improved UI/UX and observability
 
-- Question answering from documents
-- Academic study assistant
-- Business report analysis
-- Voice-based document interaction
-- Knowledge retrieval systems
-
----
-
-## 10. Future Enhancements
-
-- User authentication and multi-user support
-- Cloud deployment (AWS, Render, or Railway)
-- Improved ranking and retrieval quality
-- Advanced UI animations
-- Multi-language support
-- Document management dashboard
-
----
-
-## 11. Conclusion
-
-This project demonstrates a complete implementation of a modern AI assistant that combines document intelligence, real-time interaction, and voice capabilities. It reflects practical application of RAG systems and showcases full-stack integration of AI technologies.
-
----
-
-## 12. Author
-
+**Author**
 Manvitha Kallu
 
----
-
-## 13. Acknowledgment
-
-This project is built as a learning and development initiative to explore advanced AI system design, including LLM integration, vector databases, and real-time interfaces.
-
----
