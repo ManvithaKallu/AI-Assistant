@@ -2,7 +2,7 @@
 
 A full-stack Retrieval-Augmented Generation (RAG) system that enables users to query documents using text and voice.
 
----
+
 
 ## Overview
 
@@ -10,7 +10,7 @@ This application allows users to upload documents and interact with them using n
 
 The system supports both chat and voice interaction, with streaming responses and source attribution.
 
----
+
 
 ## Features
 
@@ -22,13 +22,13 @@ The system supports both chat and voice interaction, with streaming responses an
 - Source citations (document + page)
 - Session-based document handling
 
----
+
 
 ## Architecture
 
 User Input → Frontend (React) → FastAPI → Retrieval (FAISS) → LLM → Streaming Response → UI + Audio
 
----
+
 
 ## Tech Stack
 
@@ -43,7 +43,7 @@ User Input → Frontend (React) → FastAPI → Retrieval (FAISS) → LLM → St
 - Tailwind CSS
 - Web Speech API
 
----
+
 
 ## Project Structure
 
@@ -54,7 +54,7 @@ AI-Assistant
 ├── frontend/  
 └── .gitignore  
 
----
+
 
 ## Setup
 
@@ -67,7 +67,7 @@ cd frontend
 npm install  
 npm run dev  
 
----
+
 
 ## Engineering Notes
 
@@ -76,7 +76,7 @@ npm run dev
 - Local LLM ensures privacy and offline capability  
 - Voice layer enables conversational interaction beyond chat  
 
----
+
 
 ## Limitations
 
@@ -85,7 +85,7 @@ npm run dev
 - Performance dependent on local environment  
 - Limited file format support  
 
----
+
 
 ## Future Work
 
@@ -94,7 +94,7 @@ npm run dev
 - Retrieval reranking  
 - Cloud deployment  
 
----
+
 
 ## Author
 
